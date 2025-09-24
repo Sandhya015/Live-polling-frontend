@@ -1,10 +1,10 @@
 [build]
-  base = "."
-  publish = "build"
-  command = "npm run build"
+  base = "client"
+  publish = "client/build"
+  command = "cd client && npm install && npm run build"
 
 [build.environment]
-  REACT_APP_SERVER_URL = "https://your-backend-url.railway.app"
+  REACT_APP_SERVER_URL = "https://live-polling-backend-production-8ab9.up.railway.app"
 
 [[redirects]]
   from = "/*"
