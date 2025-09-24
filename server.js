@@ -12,9 +12,13 @@ const io = socketIo(server, {
     origin: [
       "http://localhost:3000",
       process.env.CLIENT_URL,
-      "https://your-app-name.netlify.app" // Replace with your actual Netlify URL
+      process.env.FRONTEND_URL,
+      "https://*.netlify.app",
+      "https://*.vercel.app",
+      "https://visionary-cuchufli-053a6e.netlify.app"
     ].filter(Boolean),
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -23,7 +27,10 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     process.env.CLIENT_URL,
-    "https://your-app-name.netlify.app" // Replace with your actual Netlify URL
+    process.env.FRONTEND_URL,
+    "https://*.netlify.app",
+    "https://*.vercel.app",
+    "https://visionary-cuchufli-053a6e.netlify.app"
   ].filter(Boolean),
   credentials: true
 }));
