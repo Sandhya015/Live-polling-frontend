@@ -1,198 +1,123 @@
 # Live Polling System
 
-A real-time polling system built with React, Express.js, and Socket.io that allows teachers to create polls and students to participate in real-time.
+A real-time polling system built with React, Redux, Express.js, and Socket.io. This application allows teachers to create polls and students to answer them in real-time.
 
 ## Features
 
 ### Teacher Features
-- Create new polls with custom questions and options
-- View live polling results in real-time
-- Manage students (view connected students, remove students)
-- Chat with students
-- Configurable poll time limits (30s, 60s, 90s, 120s)
-- View past poll results
+- Create polls with multiple choice questions
+- Set correct answers during poll creation
+- View live polling results
+- Monitor student participation
+- Remove students from the session
+- View past poll results with correct answers highlighted
+- Real-time chat with students
 
 ### Student Features
-- Enter unique name on first visit
-- Answer poll questions in real-time
+- Join sessions with a unique name
+- Answer polls in real-time
 - View live results after submission
-- 60-second time limit per question (configurable by teacher)
-- Chat with teacher and classmates
-- Real-time updates
-
-### Technical Features
-- Real-time communication using Socket.io
-- Redux for state management
-- Material-UI for modern, responsive design
-- TypeScript for type safety
-- Automatic reconnection handling
-- Error handling and user feedback
+- See if their answer was correct
+- Chat with teacher and other students
 
 ## Technology Stack
 
-- **Frontend**: React 18 with TypeScript
-- **Backend**: Express.js with Socket.io
+- **Frontend**: React 18, Redux, TypeScript, Material-UI
+- **Backend**: Node.js, Express.js, Socket.io
+- **Real-time Communication**: WebSockets
 - **State Management**: Redux with Redux Thunk
-- **UI Library**: Material-UI (MUI)
-- **Real-time Communication**: Socket.io
-- **Styling**: Material-UI components and custom CSS
-
-## Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-
-## Installation & Setup
-
-### 1. Clone the repository
-```bash
-git clone <repository-url>
-cd Live-polling
-```
-
-### 2. Install backend dependencies
-```bash
-npm install
-```
-
-### 3. Install frontend dependencies
-```bash
-cd client
-npm install
-cd ..
-```
-
-### 4. Environment Setup
-Create a `.env` file in the root directory (optional):
-```env
-PORT=5000
-CLIENT_URL=http://localhost:3000
-```
-
-### 5. Start the application
-
-#### Option 1: Start both servers separately
-
-**Terminal 1 - Backend:**
-```bash
-npm run dev
-```
-
-**Terminal 2 - Frontend:**
-```bash
-cd client
-npm start
-```
-
-#### Option 2: Start backend only (for production)
-```bash
-npm start
-```
-
-## Usage
-
-1. **Open your browser** and navigate to `http://localhost:3000`
-2. **Choose your role**: Teacher or Student
-3. **For Students**: Enter your name (must be unique)
-4. **For Teachers**: Create polls and monitor results
-5. **For Students**: Answer polls and view results
-
-## API Endpoints
-
-- `GET /api/polls` - Get all polls
-- `GET /api/students` - Get all connected students
-
-## Socket Events
-
-### Client to Server
-- `teacher-join` - Teacher joins the session
-- `student-join` - Student joins with name
-- `create-poll` - Teacher creates a new poll
-- `submit-answer` - Student submits an answer
-- `send-message` - Send chat message
-- `remove-student` - Teacher removes a student
-
-### Server to Client
-- `teacher-connected` - Teacher connection confirmed
-- `student-connected` - Student connection confirmed
-- `poll-created` - New poll created
-- `poll-results-updated` - Poll results updated
-- `poll-ended` - Poll time expired
-- `student-joined` - New student joined
-- `student-left` - Student disconnected
-- `student-answered` - Student submitted answer
-- `new-message` - New chat message
-- `error` - Error occurred
 
 ## Project Structure
 
 ```
 Live-polling/
-├── server.js              # Express server with Socket.io
-├── package.json           # Backend dependencies
-├── client/                # React frontend
+├── client/                 # React frontend
 │   ├── public/
 │   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── services/      # Socket service
-│   │   ├── store/         # Redux store
-│   │   ├── types/         # TypeScript types
-│   │   └── App.tsx        # Main App component
-│   └── package.json       # Frontend dependencies
+│   │   ├── components/     # React components
+│   │   ├── services/       # Socket.io service
+│   │   ├── store/          # Redux store
+│   │   └── types/          # TypeScript types
+│   └── package.json
+├── server.js              # Express.js backend
+├── package.json           # Backend dependencies
 └── README.md
 ```
 
+## Installation & Setup
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Backend Setup
+```bash
+cd Live-polling
+npm install
+npm start
+```
+The backend server will run on port 5000.
+
+### Frontend Setup
+```bash
+cd client
+npm install
+npm start
+```
+The frontend will run on port 3000.
+
+## Usage
+
+1. **Start the application**:
+   - Run the backend server: `npm start` (from root directory)
+   - Run the frontend: `npm start` (from client directory)
+
+2. **As a Teacher**:
+   - Select "Teacher" role
+   - Create polls with questions and options
+   - Mark correct answers during creation
+   - Monitor student responses in real-time
+   - View past poll results
+
+3. **As a Student**:
+   - Select "Student" role
+   - Enter your name to join the session
+   - Answer active polls
+   - View results and see if you were correct
+
+## API Endpoints
+
+- `GET /` - Health check
+- WebSocket events:
+  - `teacher-join` - Teacher joins the session
+  - `student-join` - Student joins with name
+  - `create-poll` - Create a new poll
+  - `submit-answer` - Submit student answer
+  - `set-correct-answer` - Mark correct answer
+  - `remove-student` - Remove student from session
+
 ## Deployment
 
-### Backend Deployment (Heroku)
-1. Create a Heroku app
-2. Set environment variables:
-   - `CLIENT_URL=https://your-frontend-url.com`
-3. Deploy the backend
+### Frontend Deployment
+The frontend can be deployed to any static hosting service:
+- Netlify
+- Vercel
+- GitHub Pages
+- AWS S3 + CloudFront
 
-### Frontend Deployment (Vercel/Netlify)
-1. Build the frontend: `npm run build`
-2. Deploy the `client/build` folder
-3. Set environment variable: `REACT_APP_SERVER_URL=https://your-backend-url.com`
+### Backend Deployment
+The backend can be deployed to:
+- Heroku
+- AWS EC2
+- DigitalOcean
+- Railway
 
-## Development
-
-### Available Scripts
-
-**Backend:**
-- `npm start` - Start production server
-- `npm run dev` - Start development server with nodemon
-
-**Frontend:**
-- `npm start` - Start development server
-- `npm run build` - Build for production
-- `npm test` - Run tests
-
-## Features Implementation Status
-
-### ✅ Completed
-- [x] Role selection (Teacher/Student)
-- [x] Real-time poll creation and management
-- [x] Student name entry and validation
-- [x] Live poll results display
-- [x] 60-second time limit with countdown
-- [x] Chat functionality
-- [x] Student management (view/remove)
-- [x] Configurable poll time limits
-- [x] Error handling and user feedback
-- [x] Responsive design with Material-UI
-
-### 🔄 In Progress
-- [ ] Past poll results storage and display
-- [ ] Enhanced UI following Figma design
-- [ ] Performance optimizations
-
-### 📋 Future Enhancements
-- [ ] Database integration for persistent storage
-- [ ] User authentication
-- [ ] Poll templates
-- [ ] Export poll results
-- [ ] Mobile app support
+### Environment Variables
+Create a `.env` file in the root directory:
+```
+PORT=5000
+NODE_ENV=production
+```
 
 ## Contributing
 
@@ -206,9 +131,23 @@ Live-polling/
 
 This project is licensed under the MIT License.
 
-## Support
+## Screenshots
 
-For support or questions, please open an issue in the repository.
-# Live-polling
-# Live-polling
-# Live-polling
+### Teacher Dashboard
+- Create polls with correct answers
+- Monitor student participation
+- View live results and past polls
+
+### Student Dashboard
+- Join sessions with unique names
+- Answer polls in real-time
+- See correct answers and performance feedback
+
+## Future Enhancements
+
+- [ ] Database integration for persistent storage
+- [ ] User authentication and authorization
+- [ ] Poll templates and categories
+- [ ] Advanced analytics and reporting
+- [ ] Mobile app support
+- [ ] Poll scheduling and automation
