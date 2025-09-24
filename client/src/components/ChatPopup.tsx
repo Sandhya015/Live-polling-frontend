@@ -22,10 +22,9 @@ import {
   Person as PersonIcon,
   School as SchoolIcon
 } from '@mui/icons-material';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { socketService } from '../services/socketService';
-import { ChatMessage } from '../types';
 
 interface ChatPopupProps {
   open: boolean;
@@ -33,7 +32,6 @@ interface ChatPopupProps {
 }
 
 const ChatPopup: React.FC<ChatPopupProps> = ({ open, onClose }) => {
-  const dispatch = useDispatch();
   const { userType, student, chatMessages } = useSelector((state: RootState) => state.app);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
