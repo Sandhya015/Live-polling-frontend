@@ -1,7 +1,7 @@
 [build]
   base = "."
   publish = "client/build"
-  command = "npm install --legacy-peer-deps && cd client && npm install --legacy-peer-deps && npm run build"
+  command = "npm install --legacy-peer-deps && cd client && echo 'REACT_APP_SERVER_URL=https://live-polling-backend-production-8ab9.up.railway.app' > .env && npm install --legacy-peer-deps && npm run build"
 
 [build.environment]
   REACT_APP_SERVER_URL = "https://live-polling-backend-production-8ab9.up.railway.app"
