@@ -15,7 +15,7 @@
 
 ### Step 2: Set Environment Variables
 After deployment, go to Site Settings → Environment Variables:
-- **REACT_APP_SERVER_URL**: `https://your-backend-url.railway.app` (replace with your actual backend URL)
+- **REACT_APP_SERVER_URL**: `https://live-polling-backend-production-8ab9.up.railway.app`
 
 ## Backend Deployment (Railway)
 
@@ -33,7 +33,7 @@ After deployment, Railway will give you a URL like:
 
 ### Step 3: Update Frontend
 Go back to Netlify and update the environment variable:
-- **REACT_APP_SERVER_URL**: `https://your-app-name.railway.app`
+- **REACT_APP_SERVER_URL**: `https://live-polling-backend-production-8ab9.up.railway.app`
 
 ## Alternative: Deploy Both to Render
 
@@ -58,7 +58,7 @@ Go back to Netlify and update the environment variable:
 
 ### Frontend (.env.production)
 ```
-REACT_APP_SERVER_URL=https://your-backend-url.railway.app
+REACT_APP_SERVER_URL=https://live-polling-backend-production-8ab9.up.railway.app
 ```
 
 ### Backend (Railway Environment Variables)
@@ -70,7 +70,7 @@ PORT=5000
 ## Testing Deployment
 
 1. **Frontend**: Visit your Netlify URL
-2. **Backend**: Test with `curl https://your-backend-url.railway.app`
+2. **Backend**: Test with `curl https://live-polling-backend-production-8ab9.up.railway.app`
 3. **Full App**: Create a poll as teacher, join as student
 
 ## Troubleshooting

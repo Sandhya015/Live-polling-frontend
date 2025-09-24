@@ -29,8 +29,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve static files from React build
-app.use(express.static(path.join(__dirname, 'client/build')));
+// API routes only - no static file serving
 
 // In-memory storage (in production, use a database)
 let polls = new Map();
@@ -95,7 +94,7 @@ io.on('connection', (socket) => {
   // Handle poll creation
   socket.on('create-poll', (data) => {
     if (socket.rooms.has('teachers')) {
-      const { question, options, timeLimit = 60 } = data;
+      const { question, options, timeLimit = 60, correctAnswerIndex } = data;
       
       // Check if we can create a new poll
       if (currentPoll && !canCreateNewPoll()) {
@@ -312,8 +311,17 @@ app.get('/api/students', (req, res) => {
 });
 
 // Serve React app for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+// API health check endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Live Polling System Backend API',
+    status: 'running',
+    version: '1.0.0',
+    endpoints: {
+      students: '/api/students',
+      socket: 'Socket.io connection available'
+    }
+  });
 });
 
 const PORT = process.env.PORT || 5000;
