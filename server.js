@@ -9,13 +9,24 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      process.env.CLIENT_URL,
+      "https://your-app-name.netlify.app" // Replace with your actual Netlify URL
+    ].filter(Boolean),
     methods: ["GET", "POST"]
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    process.env.CLIENT_URL,
+    "https://your-app-name.netlify.app" // Replace with your actual Netlify URL
+  ].filter(Boolean),
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve static files from React build
