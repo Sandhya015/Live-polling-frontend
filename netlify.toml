@@ -1,0 +1,12 @@
+[build]
+  base = "client"
+  publish = "client/build"
+  command = "npm install && npm run build"
+
+[build.environment]
+  REACT_APP_SERVER_URL = "https://live-polling-backend-production-8ab9.up.railway.app"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
