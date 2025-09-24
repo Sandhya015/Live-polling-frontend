@@ -18,7 +18,7 @@ A real-time polling system built with React, Redux, Express.js, and Socket.io. T
 - Answer polls in real-time
 - View live results after submission
 - See if their answer was correct
-- Chat with teacher and other students
+- Chat with teacher and other students too
 
 ## Technology Stack
 
