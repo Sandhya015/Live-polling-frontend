@@ -5,6 +5,14 @@ const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
+// Crash resilience: log and keep process alive for Railway (avoids silent exits)
+process.on('uncaughtException', (err) => {
+  console.error('uncaughtException:', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('unhandledRejection:', reason, promise);
+});
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -331,8 +339,12 @@ app.get('/', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 const HOST = process.env.HOST || '0.0.0.0';
-server.listen(Number(PORT), HOST, () => {
+
+server.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
+}).on('error', (err) => {
+  console.error('Server listen error:', err);
+  process.exit(1);
 });

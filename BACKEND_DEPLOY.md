@@ -60,9 +60,38 @@ If Railway keeps failing, use Render (supports Node + WebSockets):
 
 ---
 
-## After the backend is running
+## Next steps after successful deploy
 
-1. Copy the backend URL (e.g. `https://xxx.up.railway.app` or `https://xxx.onrender.com`).
-2. In **Vercel** → your project → **Settings** → **Environment Variables**:
-   - Add `REACT_APP_SERVER_URL` = that backend URL.
-3. Redeploy the frontend on Vercel so the new variable is applied.
+1. **Get your backend URL**  
+   Railway → your service → **Settings** → **Networking** → copy the public URL (e.g. `https://your-app.up.railway.app`).
+
+2. **Connect the frontend (Vercel)**  
+   - Vercel → your frontend project → **Settings** → **Environment Variables**.  
+   - Add: **`REACT_APP_SERVER_URL`** = your Railway backend URL (no trailing slash).  
+   - **Redeploy** the Vercel app so the new variable is used.
+
+3. **Test**  
+   - Open your Vercel frontend URL → choose Teacher or Student → create/join and run a poll.  
+   - Backend health: open `https://your-backend.up.railway.app/` in a browser; you should see JSON with `"status": "running"`.
+
+---
+
+## If the app is crashing
+
+1. **Check Railway logs**  
+   Railway → your service → **Deployments** → latest deploy → **View logs** (or **Logs** tab).  
+   Look for the **exact error** (e.g. `Error: listen EADDRINUSE`, `Cannot find module`, stack trace).
+
+2. **Start command**  
+   In Railway **Settings** → **Deploy** / **Start**, use **`node server.js`** or **`npm start`** (no `cd`).  
+   Root Directory must be **`backend`**, so the working directory is already the backend folder.
+
+3. **Port**  
+   Do **not** set `PORT` yourself. Railway sets `PORT`; the app uses `process.env.PORT`.
+
+4. **Node version**  
+   In Railway **Settings** → **Variables**, you can set **`NODE_VERSION`** = **`18`** or **`20`** if you see Node-related crashes.  
+   Or in `backend/package.json` add under `"engines"`: `"node": "18.x"` and redeploy.
+
+5. **Redeploy**  
+   After changing start command or variables, trigger a **Redeploy** from the Railway dashboard.
