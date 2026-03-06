@@ -75,6 +75,8 @@ The repo has a **`render.yaml`** at the root. To use it:
 5. In **Environment** add (optional): **`FRONTEND_URL`** = `https://your-app.vercel.app`.
 6. In Vercel, set **`REACT_APP_SERVER_URL`** = your Render URL and redeploy the frontend.
 
+**If you deploy from repo root** (no Root Directory set): the root **build** script runs `cd backend && npm install` so `backend/node_modules` is created. Use **Build**: `npm run build` or `yarn build`, **Start**: `npm start` or `yarn start`, then redeploy.
+
 **Note:** Free tier may spin down after ~15 min inactivity; the first request after that can take 30–60 seconds to wake the service.
 
 ---
