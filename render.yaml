@@ -1,0 +1,11 @@
+# Render Blueprint: deploy only the backend (backend/ folder)
+# Connect this repo in Render and use this blueprint, or create a Web Service manually with rootDir: backend
+
+services:
+  - type: web
+    name: live-polling-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /

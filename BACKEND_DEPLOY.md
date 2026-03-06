@@ -42,21 +42,40 @@ You don’t need to set `PORT`; Railway sets it. Optionally set:
 
 ---
 
-## Alternative: Deploy on Render (free tier)
+## Deploy on Render (recommended)
 
-If Railway keeps failing, use Render (supports Node + WebSockets):
+Render supports Node + WebSockets and is often more stable for this backend.
 
-1. Go to [render.com](https://render.com) → **New** → **Web Service**.
-2. Connect the same GitHub repo. Set:
-   - **Root directory**: **`backend`** (so only backend is built).
-   - **Runtime**: Node.
-   - **Build command**: `npm install` or `npm ci`.
-   - **Start command**: `npm start` or `node server.js`.
-3. **Create Web Service**. Render will assign a URL like `https://your-app.onrender.com`.
-4. In **Environment** add (optional): `FRONTEND_URL` = `https://your-app.vercel.app`.
-5. Use `https://your-app.onrender.com` as `REACT_APP_SERVER_URL` in Vercel.
+### Option A: Use the Blueprint (render.yaml)
 
-**Note:** Free tier may spin down after inactivity; first request can be slow.
+The repo has a **`render.yaml`** at the root. To use it:
+
+1. Go to [dashboard.render.com](https://dashboard.render.com) → **New** → **Blueprint**.
+2. Connect your GitHub account and select the **Live-polling** repo.
+3. Render will detect `render.yaml` and create a web service **live-polling-backend** with:
+   - **Root directory**: `backend`
+   - **Build**: `npm install`
+   - **Start**: `npm start`
+   - **Health check**: `/`
+4. Click **Apply**. After the first deploy, copy your service URL (e.g. `https://live-polling-backend.onrender.com`).
+5. In the service **Environment** tab, add (optional): **`FRONTEND_URL`** = your Vercel frontend URL.
+6. In **Vercel** → Environment Variables, set **`REACT_APP_SERVER_URL`** = your Render URL (no trailing slash). Redeploy the frontend.
+
+### Option B: Manual Web Service
+
+1. Go to [dashboard.render.com](https://dashboard.render.com) → **New** → **Web Service**.
+2. Connect the same GitHub repo and branch.
+3. Set:
+   - **Name**: e.g. `live-polling-backend`
+   - **Root directory**: **`backend`** (required).
+   - **Runtime**: **Node**.
+   - **Build command**: **`npm install`**
+   - **Start command**: **`npm start`**
+4. **Create Web Service**. Render will assign a URL like `https://live-polling-backend.onrender.com`.
+5. In **Environment** add (optional): **`FRONTEND_URL`** = `https://your-app.vercel.app`.
+6. In Vercel, set **`REACT_APP_SERVER_URL`** = your Render URL and redeploy the frontend.
+
+**Note:** Free tier may spin down after ~15 min inactivity; the first request after that can take 30–60 seconds to wake the service.
 
 ---
 
