@@ -1,17 +1,20 @@
 # Backend deployment (Railway / Render)
 
-Use this so your Vercel frontend has a working backend URL for `REACT_APP_SERVER_URL`.
+The backend lives in the **`backend/`** folder. Use this so your Vercel frontend has a working backend URL for `REACT_APP_SERVER_URL`.
 
 ---
 
-## If Railway shows "Not Found"
+## Railway: set Root Directory to `backend`
 
-### 1. Check Railway service settings
+To avoid the **"Cannot read property 'express' of undefined"** / `npm ci` error, Railway must build only the backend (no `client/` package files).
 
-- **Root directory**: leave **empty** (repo root). Your `server.js` and `package.json` are in the root.
-- **Build command**: leave default (Railway runs `npm install`).
-- **Start command**: `node server.js` (or `npm start`). Your `railway.json` already sets this.
-- **Watch paths**: leave default so pushes to this repo trigger deploys.
+### 1. Railway service settings
+
+- **Root Directory**: set to **`backend`** (required).  
+  This makes Railway use only `backend/package.json` and `backend/package-lock.json`, so `npm ci` runs correctly.
+- **Build command**: leave default (Railway runs `npm install` or `npm ci`).
+- **Start command**: `node server.js` or `npm start` (both work; `backend/railway.json` sets this).
+- **Watch paths** (optional): set to `backend/**` so only backend changes trigger deploys.
 
 ### 2. Check deployment and logs
 
@@ -44,9 +47,9 @@ If Railway keeps failing, use Render (supports Node + WebSockets):
 
 1. Go to [render.com](https://render.com) → **New** → **Web Service**.
 2. Connect the same GitHub repo. Set:
-   - **Root directory**: leave empty.
+   - **Root directory**: **`backend`** (so only backend is built).
    - **Runtime**: Node.
-   - **Build command**: `npm install`.
+   - **Build command**: `npm install` or `npm ci`.
    - **Start command**: `npm start` or `node server.js`.
 3. **Create Web Service**. Render will assign a URL like `https://your-app.onrender.com`.
 4. In **Environment** add (optional): `FRONTEND_URL` = `https://your-app.vercel.app`.
