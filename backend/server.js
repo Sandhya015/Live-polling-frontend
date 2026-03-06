@@ -15,31 +15,48 @@ process.on('unhandledRejection', (reason, promise) => {
 
 const app = express();
 const server = http.createServer(app);
+
+const explicitAllowedOrigins = new Set(
+  [
+    'http://localhost:3000',
+    process.env.CLIENT_URL,
+    process.env.FRONTEND_URL,
+    'https://visionary-cuchufli-053a6e.netlify.app'
+  ].filter(Boolean)
+);
+
+const wildcardOriginPatterns = [
+  /^https:\/\/.*\.netlify\.app$/,
+  /^https:\/\/.*\.vercel\.app$/,
+  /^https:\/\/.*\.onrender\.com$/
+];
+
+function isAllowedOrigin(origin) {
+  // Allow non-browser/server-to-server requests with no Origin header.
+  if (!origin) return true;
+  if (explicitAllowedOrigins.has(origin)) return true;
+  return wildcardOriginPatterns.some((pattern) => pattern.test(origin));
+}
+
+function corsOriginHandler(origin, callback) {
+  if (isAllowedOrigin(origin)) {
+    return callback(null, true);
+  }
+  console.warn('Blocked CORS origin:', origin);
+  return callback(new Error('Not allowed by CORS'));
+}
+
 const io = socketIo(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      process.env.CLIENT_URL,
-      process.env.FRONTEND_URL,
-      "https://*.netlify.app",
-      "https://*.vercel.app",
-      "https://visionary-cuchufli-053a6e.netlify.app"
-    ].filter(Boolean),
-    methods: ["GET", "POST"],
+    origin: corsOriginHandler,
+    methods: ['GET', 'POST'],
     credentials: true
   }
 });
 
 // Middleware
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    process.env.CLIENT_URL,
-    process.env.FRONTEND_URL,
-    "https://*.netlify.app",
-    "https://*.vercel.app",
-    "https://visionary-cuchufli-053a6e.netlify.app"
-  ].filter(Boolean),
+  origin: corsOriginHandler,
   credentials: true
 }));
 app.use(express.json());
