@@ -7,7 +7,8 @@
     "start": "cd backend && npm start",
     "dev": "cd backend && npm run dev",
     "client": "cd client && npm start",
-    "build": "cd client && npm run build"
+    "build": "echo 'Backend-only deploy: no build. Set Railway Root Directory to backend.'",
+    "build:client": "cd client && npm run build"
   },
   "engines": {
     "node": ">=14.0.0"

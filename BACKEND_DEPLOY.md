@@ -6,12 +6,13 @@ The backend lives in the **`backend/`** folder. Use this so your Vercel frontend
 
 ## Railway: set Root Directory to `backend`
 
-To avoid the **"Cannot read property 'express' of undefined"** / `npm ci` error, Railway must build only the backend (no `client/` package files).
+Railway must build **only** the backend. If your build log shows **"copy backend/..., client/..., package.json"**, the Root Directory is wrong and the build will run the frontend build (and fail). Set it to **`backend`**.
 
 ### 1. Railway service settings
 
 - **Root Directory**: set to **`backend`** (required).  
-  This makes Railway use only `backend/package.json` and `backend/package-lock.json`, so `npm ci` runs correctly.
+  In the service **Settings**, find **Root Directory** / **Build** and enter **`backend`** (no leading slash).  
+  The build should then only copy/use files from `backend/`, and the build step will run a no-op (no frontend build).
 - **Build command**: leave default (Railway runs `npm install` or `npm ci`).
 - **Start command**: `node server.js` or `npm start` (both work; `backend/railway.json` sets this).
 - **Watch paths** (optional): set to `backend/**` so only backend changes trigger deploys.
