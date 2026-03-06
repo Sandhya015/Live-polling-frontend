@@ -40,7 +40,8 @@ function isAllowedOrigin(origin) {
 
 function corsOriginHandler(origin, callback) {
   if (isAllowedOrigin(origin)) {
-    return callback(null, true);
+    // Reflect explicit browser origin when present so ACAO is set correctly.
+    return callback(null, origin || true);
   }
   console.warn('Blocked CORS origin:', origin);
   return callback(new Error('Not allowed by CORS'));
