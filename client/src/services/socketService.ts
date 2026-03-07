@@ -20,19 +20,20 @@ import { CreatePollData, SubmitAnswerData, Student, ChatMessage } from '../types
 
 class SocketService {
   private socket: Socket | null = null;
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
 
   connect(): void {
+    if (this.socket) return;
+
     const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
     
     this.socket = io(serverUrl, {
-      transports: ['polling', 'websocket'],
-      timeout: 20000,
-      forceNew: true,
+      // Prefer websocket first to reduce long-polling latency on hosted deployments.
+      transports: ['websocket', 'polling'],
+      timeout: 10000,
       reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000
     });
 
     this.setupEventListeners();
@@ -52,7 +53,6 @@ class SocketService {
       console.log('Connected to server');
       store.dispatch(setConnectionStatus(true));
       store.dispatch(clearError());
-      this.reconnectAttempts = 0;
     });
 
     this.socket.on('disconnect', () => {
@@ -62,8 +62,9 @@ class SocketService {
 
     this.socket.on('connect_error', (error) => {
       console.error('Connection error:', error);
-      store.dispatch(setError('Connection failed. Please check your internet connection.'));
-      this.handleReconnect();
+      store.dispatch(
+        setError('Connecting to server... if this is first load, backend may be waking up.')
+      );
     });
 
     this.socket.on('error', (data) => {
@@ -145,20 +146,6 @@ class SocketService {
       store.dispatch(setError('You have been removed by the teacher.'));
       // Redirect to home or show appropriate message
     });
-  }
-
-  private handleReconnect(): void {
-    if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      this.reconnectAttempts++;
-      const delay = Math.pow(2, this.reconnectAttempts) * 1000; // Exponential backoff
-      
-      setTimeout(() => {
-        console.log(`Reconnection attempt ${this.reconnectAttempts}`);
-        this.connect();
-      }, delay);
-    } else {
-      store.dispatch(setError('Unable to connect to server. Please refresh the page.'));
-    }
   }
 
   private startPollTimer(timeRemaining: number): void {
